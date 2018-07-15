@@ -8,7 +8,9 @@ using Services.AuthService.Models;
 using Dokmee.Dms.Connector.Advanced;
 using Dokmee.Dms.Connector.Advanced.Core.Data;
 using Dokmee.Dms.Connector.Advanced.Extension;
+using Repositories;
 using Services.SessionHelperService;
+using Services.TempDbService;
 
 namespace Services.AuthService
 {
@@ -17,10 +19,12 @@ namespace Services.AuthService
         private ISessionHelperService _sessionHelperService;
         private DmsConnector _dmsConnector;
         private ConnectorModel _connectorModel;
+        private ITempDbService _tempDbService;
 
-        public DokmeeService(ISessionHelperService sessionHelperService)
+        public DokmeeService(ISessionHelperService sessionHelperService, ITempDbService tempDbService)
         {
             _sessionHelperService = sessionHelperService;
+            _tempDbService = tempDbService;
         }
 
         private ConnectorModel ConnectorVm
@@ -49,20 +53,49 @@ namespace Services.AuthService
             return Task.FromResult(result);
         }
 
-        public IEnumerable<DokmeeCabinet> GetCurrentUserCabinet()
+        public IEnumerable<DokmeeCabinet> GetCurrentUserCabinet(string username)
         {
+            UserLogin user = _tempDbService.GetUserLogin(username);
+            if (user == null)
+            {
+                throw new Exception("User login is not save to database.");
+            }
+
             if (_dmsConnector == null)
             {
-                var cabinets = CreateConnector(_sessionHelperService.Username, _sessionHelperService.Password, _sessionHelperService.ConnectorType);
+                var cabinets = CreateConnector(user.Username, user.Password, (ConnectorType)user.Type);
                 return cabinets.DokmeeCabinets;
             }
 
             var loginResult = _dmsConnector.Login(new LogonInfo
             {
-                Username = _sessionHelperService.Username,
-                Password = _sessionHelperService.Password
+                Username = user.Username,
+                Password = user.Password
             });
             return loginResult.DokmeeCabinets;
+        }
+
+        public IEnumerable<DmsNode> GetCabinetContent(string cabinetId, string username)
+        {
+            if (string.IsNullOrWhiteSpace(cabinetId))
+            {
+                throw new ArgumentException("cabinetId is null or empty");
+            }
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException("username is null or empty");
+            }
+
+            UserLogin user = _tempDbService.GetUserLogin(username);
+            if (_dmsConnector == null)
+            {
+                CreateConnector(user.Username, user.Password, (ConnectorType)user.Type);
+            }
+
+            _dmsConnector.RegisterCabinet(new Guid(cabinetId));
+            IEnumerable<DmsNode> dmsNodes = _dmsConnector.GetFsNodesByName();
+            return dmsNodes;
         }
 
         private DokmeeCabinetResult CreateConnector(string username, string password, ConnectorType type)

@@ -32,9 +32,8 @@ namespace Web.Controllers
         {
             try
             {
-                string userId = User.Identity.GetUserId();
                 IndexModel model = new IndexModel();
-                IEnumerable<DokmeeCabinet> dokmeeCabinets = _dokmeeService.GetCurrentUserCabinet();
+                IEnumerable<DokmeeCabinet> dokmeeCabinets = _dokmeeService.GetCurrentUserCabinet(User.Identity.GetUserId());
                 model.Cabinets = _mapper.Map<IEnumerable<Cabinet>>(dokmeeCabinets);
                 return View(model);
             }
@@ -45,8 +44,7 @@ namespace Web.Controllers
             catch (InvalidePasswordException ex)
             {
                 return RedirectToAction("Logoff", "Account");
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 throw;
             }
@@ -59,6 +57,15 @@ namespace Web.Controllers
             _sessionHelperService.Password = password;
             _sessionHelperService.ConnectorType = loginType;
             return RedirectToAction("Index");
+        }
+
+        public ActionResult CabinetDetail(string cabinetId)
+        {
+            string username = User.Identity.GetUserId();
+            IEnumerable<DmsNode> cabinetContent = _dokmeeService.GetCabinetContent(cabinetId, username);
+            IEnumerable<Node> nodes = _mapper.Map<IEnumerable<Node>>(cabinetContent);
+            ViewBag.cabinetId = cabinetId;
+            return View(nodes);
         }
     }
 }
