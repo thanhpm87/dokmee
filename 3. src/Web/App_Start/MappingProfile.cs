@@ -19,7 +19,9 @@ namespace Web.App_Start
         //cfg.CreateMap<QuestionModel, Question>();
         /*etc...*/
 
-        cfg.CreateMap<DokmeeCabinet, Cabinet>().ReverseMap();
+        cfg.CreateMap<DokmeeCabinet, Cabinet>()
+            .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.CabinetID))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CabinetName));
       });
 
       return config;

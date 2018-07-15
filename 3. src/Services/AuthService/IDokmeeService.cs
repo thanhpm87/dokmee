@@ -1,6 +1,8 @@
-﻿using Services.AuthService.Models;
+﻿using System.Collections.Generic;
+using Services.AuthService.Models;
 using System.Threading.Tasks;
 using DokCapture.ServicenNetFramework.Auth.Models;
+using Dokmee.Dms.Connector.Advanced.Core.Data;
 
 namespace DokCapture.ServicenNetFramework.Auth
 {
@@ -10,5 +12,6 @@ namespace DokCapture.ServicenNetFramework.Auth
 
     Task<SignInResult> Login(string username, string password, ConnectorType type);
 
+      IEnumerable<DokmeeCabinet> GetCurrentUserCabinet();
   }
 }
