@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/2. libs/DokmeeConnector/Dokmee Connector.v1.5/Dokmee Connector Sample App/obj/Debug
+/2. libs/DokmeeConnector/Dokmee Connector.v1.5/Dokmee Connector Sample App/bin/Debug
