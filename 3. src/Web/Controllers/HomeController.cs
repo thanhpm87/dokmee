@@ -116,7 +116,7 @@ namespace Web.Controllers
 							{
 								new DokmeeIndex
 								{
-									Name="Customer Status",
+									Name="Document Status",
 									Value=customerStatus
 								}
 							};
@@ -124,6 +124,7 @@ namespace Web.Controllers
 						}
 					}
 				}
+				result = true;
 			}
 			return View(result);
 		}
