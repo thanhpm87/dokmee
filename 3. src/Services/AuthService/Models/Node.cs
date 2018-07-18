@@ -10,5 +10,6 @@ namespace Services.AuthService.Models
         public Guid ID { get; set; }
         public Guid FieldID { get; set; }
         public bool IsFolder { get; set; }
-    }
+    public object IsRoot { get; set; }
+  }
 }

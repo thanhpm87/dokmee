@@ -1,0 +1,33 @@
+﻿.navbar {
+  background-color: #3288e6 !important; }
+
+.nav a {
+  color: white !important; }
+
+.navbar-header .logo {
+  max-height: 40px;
+  height: 100%;
+  margin: 5px; }
+
+.text-center {
+  text-align: center !important; }
+
+.body-content {
+  min-height: 75vh; }
+
+.my-box {
+  border: 1px solid #3288e6;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px; }
+  .my-box .box-header {
+    margin: 2px; }
+    .my-box .box-header h3 {
+      margin: 0px; }
+  .my-box .box-body {
+    margin: 5px; }
+
+.folder-item-icon {
+  width: 20px;
+  height: auto; }
+

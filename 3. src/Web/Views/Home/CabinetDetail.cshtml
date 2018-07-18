@@ -11,8 +11,8 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th style="width: 30%;">ID</th>
-                    <th style="width: 50%;">Name</th>
+                    <th style="width: 10%;">ID</th>
+                    <th style="width: 60%;">Name</th>
                     <th style="width: 20%;">Type</th>
                 </tr>
                 </thead>
@@ -21,11 +21,31 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.ID</td>
+
                         <td>
-                            <a>
-                                @item.Name
-                            </a>
+                            @if (item.IsFolder)
+                            {
+                                <img src="~/Content/imgs/folder-icon.png" class="folder-item-icon"/>
+                            }
+                            else
+                            {
+                                <img src="~/Content/imgs/file-icon.png" class="folder-item-icon"/>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsFolder)
+                            {
+                                <a href="/home/folder?id=@item.ID&isRoot=@item.IsRoot.ToString()">
+                                    @item.Name
+                                </a>
+                            }
+                            else
+                            {
+                                <a>
+                                    @item.Name
+                                </a>
+                            }
+                          
                         </td>
                         <td>
                             @if (item.IsFolder)
