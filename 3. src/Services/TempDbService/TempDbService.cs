@@ -17,7 +17,8 @@ namespace Services.TempDbService
         public TempDbService()
         {
             _dbContext = new DokmeeTempEntities();
-        }
+
+		}
 
 
         public void SetUser(string username, string password, ConnectorType type)

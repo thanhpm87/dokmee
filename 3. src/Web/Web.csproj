@@ -262,6 +262,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\Home\DetailModel.cs" />
     <Compile Include="ViewModels\Home\IndexModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +335,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\CabinetDetail.cshtml" />
     <Content Include="Views\Home\Folder.cshtml" />
+    <Content Include="Views\Home\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

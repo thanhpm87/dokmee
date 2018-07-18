@@ -1,0 +1,125 @@
+﻿@model Web.ViewModels.Home.DetailModel
+@{
+    ViewBag.Title = "File Details";
+    var results = Model?.dokmeeFilesystems;
+    int indexPairCount = 0;
+    if (results != null && results.Any())
+    {
+        indexPairCount = results.First().IndexFieldPairCollection.Count();
+    }
+    var cabinetId = ViewBag.cabinetId;
+}
+<section>
+    <div class="col-md-12">
+        <div class="my-box">
+            <div class="box-header">
+                <h3 class="text-center">File Details</h3>
+                <hr />
+            </div>
+
+            <div class="box-body">
+                <table class="table" id="tblfileSystems">
+                    <thead>
+                        <tr>
+                            <th>EXT</th>
+                            @if (indexPairCount > 0)
+                            {
+                                for (int i = 0; i < indexPairCount; i++)
+                                {
+                                    var header = results.First().IndexFieldPairCollection[i].IndexName;
+                                    <th>@header</th>
+                                }
+                            }
+                            else
+                            {
+                                <th>Document Title</th>
+                                <th>Customer Name</th>
+                                <th>Customer #</th>
+                                <th>Sign Up Date</th>
+                                <th>Document Status</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (results != null && results.Any())
+                        {
+                            foreach (var file in results)
+                            {
+                                <tr nodeId="@file.FsGuid" id="@cabinetId">
+                                    <td>@file.FileType</td>
+                                    @for (int i = 0; i < indexPairCount; i++)
+                                    {
+                                        var data = file.IndexFieldPairCollection[i].IndexValue;
+                                        var header = results.First().IndexFieldPairCollection[i].IndexName;
+                                        if (header.ToUpper() == "DOCUMENT STATUS")
+                                        {
+                                            if (string.IsNullOrEmpty(data))
+                                            {
+                                                data = "New";
+                                            }
+                                            <td>
+                                                <select class="form-control" style="margin: auto;" id="status" value="@data">
+                                                    <option>
+                                                        New
+                                                    </option>
+                                                    <option>
+                                                        Updated
+                                                    </option>
+                                                    <option>
+                                                        Complete
+                                                    </option>
+                                                </select>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>@data</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="box-footer">
+                <button class="btn btn-primary" type="button" onclick="UpdateIndex()">Update</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts
+{
+    <script>
+        function UpdateIndex() {
+            var data = "";
+            var id = "";
+            $('#tblfileSystems > tbody  > tr').each(function () {
+                var nodeId = $(this).attr('nodeId');
+                var status = $(this).find('#status').val()
+                if (data != "") {
+                    data = data + ";";
+                }
+                data = data + nodeId + ":" + status;
+                id = $(this).attr('id');
+            });
+            var args = {
+                CustomerStatus: data,
+                CabinetId: id
+            };
+            $.ajax({
+                        url: '@Url.Action("UpdateStatus", "Home")',
+                        type: 'post',
+                        data: '{"args":' + JSON.stringify(args) + '}',
+                        contentType: "application/json; charset=utf-8",
+                        success: function (rs) {
+                                alert("Update sucessfully!");
+                        },
+                        error: function (rs) {
+                            alert("Update fail!");
+                        }
+                    });
+        }
+    </script>
+}

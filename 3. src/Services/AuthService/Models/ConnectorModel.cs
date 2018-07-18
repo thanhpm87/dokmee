@@ -141,7 +141,7 @@ namespace Services.AuthService.Models
       }
     }
 
-    private string server = @"localhost\sqlexpress";
+    private string server = @"localhost";
 
     public string Server
     {
