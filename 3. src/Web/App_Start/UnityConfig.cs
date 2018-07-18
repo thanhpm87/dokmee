@@ -11,6 +11,7 @@ using Web.Controllers;
 using System.Web;
 using AutoMapper;
 using Web.App_Start;
+using Services.TempDbService;
 
 namespace Web
 {
@@ -57,10 +58,10 @@ namespace Web
             container.RegisterType<HttpSessionState>(
                 new InjectionFactory(c => { return HttpContext.Current.Session; }));
             container.RegisterType<IDokmeeService, DokmeeService>();
-
+            container.RegisterType<ITempDbService, TempDbService>();
             container.RegisterType<ISessionHelperService, SessionHelperService>();
             container.RegisterInstance<IMapper>(MappingProfile.InitializeAutoMapper().CreateMapper());
-
+            
             container.RegisterType<AccountController>(new InjectionConstructor());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

@@ -54,7 +54,7 @@
     </Reference>
     <Reference Include="Dokmee.Dms.Connector.Advanced, Version=1.6.3.0, Culture=neutral, PublicKeyToken=07b394aec6292471, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dokmee.Dms.Connector.Advanced.dll</HintPath>
+      <HintPath>..\..\2. libs\Dokmee.Dms.Connector.Advanced.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -269,6 +269,16 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\imgs\dok-logo.png" />
+    <Content Include="Content\imgs\file-icon.png" />
+    <Content Include="Content\imgs\folder-icon.png" />
+    <Content Include="Content\imgs\mini-logo.ico" />
+    <Content Include="Content\styles\dokstyles.css">
+      <DependentUpon>dokstyles.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\dokstyles.min.css">
+      <DependentUpon>dokstyles.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -278,6 +288,11 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\styles\dokstyles.scss" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -317,6 +332,8 @@
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\CabinetDetail.cshtml" />
+    <Content Include="Views\Home\Folder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

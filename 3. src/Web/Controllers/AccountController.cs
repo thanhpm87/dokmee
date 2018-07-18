@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Services.AuthService.Models;
+using Services.TempDbService;
 using Unity.Attributes;
 using Web.Models;
 
@@ -23,6 +24,10 @@ namespace Web.Controllers
 
         [Dependency]
         public IDokmeeService DokmeeService { get; set; }
+
+        [Dependency]
+        public ITempDbService TempDbService { get; set; }
+
         public AccountController()
         {
 
@@ -96,9 +101,14 @@ namespace Web.Controllers
 
                     HttpContext.GetOwinContext()
                       .Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, ident);
+
+                    TempDbService.SetUser(model.UserName, model.Password, model.Type);
+
                     return RedirectToAction("AfterMyActionResult", "Home",
                         new { username = model.UserName, password = model.Password, loginType = model.Type }); // auth succeed 
                 }
+
+              
             }
             catch (Exception ex)
             {

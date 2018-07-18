@@ -8,10 +8,12 @@ namespace DokCapture.ServicenNetFramework.Auth
 {
   public interface IDokmeeService
   {
-   // DokUser Login(string username, string password, ConnectorType type);
+    // DokUser Login(string username, string password, ConnectorType type);
 
     Task<SignInResult> Login(string username, string password, ConnectorType type);
 
-      IEnumerable<DokmeeCabinet> GetCurrentUserCabinet();
+    IEnumerable<DokmeeCabinet> GetCurrentUserCabinet(string username);
+    IEnumerable<DmsNode> GetCabinetContent(string cabinetId, string username);
+    Task<IEnumerable<DmsNode>> GetFolderContent(string username, string id, bool isRoot);
   }
 }
