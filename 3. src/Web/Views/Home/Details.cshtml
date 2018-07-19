@@ -3,16 +3,20 @@
     ViewBag.Title = "File Details";
     var results = Model?.dokmeeFilesystems;
     int indexPairCount = 0;
+    var totalFiles = 0;
     if (results != null && results.Any())
     {
+        totalFiles = results.Count();
         indexPairCount = results.First().IndexFieldPairCollection.Count();
     }
+    var fileCount = (totalFiles) + " File" + (totalFiles > 1 ? "s" : "");
     var cabinetId = ViewBag.cabinetId;
 }
 <section>
     <div class="col-md-12">
         <div class="my-box">
             <div class="box-header">
+                <h5 class="text-left"><b>@fileCount</b></h5>
                 <h3 class="text-center">File Details</h3>
                 <hr />
             </div>
@@ -21,6 +25,9 @@
                 <table class="table" id="tblfileSystems">
                     <thead>
                         <tr>
+                            <th>
+                                <input type="checkbox" name="all" id="all" onchange="Check_Changed(this)">
+                            </th>
                             <th>EXT</th>
                             @if (indexPairCount > 0)
                             {
@@ -43,13 +50,23 @@
                     <tbody>
                         @if (results != null && results.Any())
                         {
+                            var item = 1;
                             foreach (var file in results)
                             {
                                 <tr nodeId="@file.FsGuid" id="@cabinetId">
-                                    <td>@file.FileType</td>
+                                    <td>
+                                        <input type="checkbox" name="item" id="item">
+                                    </td>
+                                    <td>
+                                        @file.FileType <img id="@file.FsGuid" cabinetId="@cabinetId" src="~/Content/imgs/folder-icon.png" class="folder-item-icon" />
+                                    </td>
                                     @for (int i = 0; i < indexPairCount; i++)
                                     {
-                                        var data = file.IndexFieldPairCollection[i].IndexValue;
+                                        var data = file.IndexFieldPairCollection[i].IndexValue?.Trim();
+                                        var newSelected = "";
+                                        var updatedSelected = "";
+                                        var completeSelected = "";
+
                                         var header = results.First().IndexFieldPairCollection[i].IndexName;
                                         if (header.ToUpper() == "DOCUMENT STATUS")
                                         {
@@ -57,15 +74,21 @@
                                             {
                                                 data = "New";
                                             }
+                                            switch (data)
+                                            {
+                                                case "New": newSelected = "selected"; break;
+                                                case "Updated": updatedSelected = "selected"; break;
+                                                case "Complete": completeSelected = "selected"; break;
+                                            }
                                             <td>
                                                 <select class="form-control" style="margin: auto;" id="status" value="@data">
-                                                    <option>
+                                                    <option @newSelected>
                                                         New
                                                     </option>
-                                                    <option>
+                                                    <option @updatedSelected>
                                                         Updated
                                                     </option>
-                                                    <option>
+                                                    <option @completeSelected>
                                                         Complete
                                                     </option>
                                                 </select>
@@ -92,34 +115,56 @@
 @section scripts
 {
     <script>
+        function Check_Changed(element) {
+            $('#tblfileSystems > tbody  > tr').find(':checkbox').prop('checked', element.checked)
+        }
+
         function UpdateIndex() {
             var data = "";
             var id = "";
             $('#tblfileSystems > tbody  > tr').each(function () {
-                var nodeId = $(this).attr('nodeId');
-                var status = $(this).find('#status').val()
-                if (data != "") {
-                    data = data + ";";
+                var select = $(this).find('input[type="checkbox"]:checked');
+                if (select.is(":checked")) {
+                    var nodeId = $(this).attr('nodeId');
+                    var status = $(this).find('#status').val()
+                    if (data != "") {
+                        data = data + ";";
+                    }
+                    data = data + nodeId + ":" + status;
                 }
-                data = data + nodeId + ":" + status;
                 id = $(this).attr('id');
             });
             var args = {
                 CustomerStatus: data,
                 CabinetId: id
             };
-            $.ajax({
-                        url: '@Url.Action("UpdateStatus", "Home")',
-                        type: 'post',
-                        data: '{"args":' + JSON.stringify(args) + '}',
-                        contentType: "application/json; charset=utf-8",
-                        success: function (rs) {
-                                alert("Update sucessfully!");
-                        },
-                        error: function (rs) {
-                            alert("Update fail!");
-                        }
-                    });
+            if (data != "") {
+                $.ajax({
+                    url: '@Url.Action("UpdateStatus", "Home")',
+                    type: 'post',
+                    data: '{"args":' + JSON.stringify(args) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (rs) {
+                        alert("Update sucessfully!");
+                    },
+                    error: function (rs) {
+                        alert("Update fail!");
+                    }
+                });
+            }
         }
+        $('img').dblclick(function () {
+            var id = $(this).attr('id');
+            var cabinetId = $(this).attr('cabinetId');
+            $.ajax({
+                url: '@Url.Action("Preview", "Home", new { id="cid", cabinetId = "ccabinetId" })'.replace("cid", id).replace("ccabinetId", cabinetId),
+                type: 'post',
+                contentType: "application/json; charset=utf-8",
+                success: function (rs) {
+                },
+                error: function (rs) {
+                }
+            });
+        })
     </script>
 }

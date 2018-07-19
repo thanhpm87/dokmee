@@ -14,6 +14,7 @@ namespace DokCapture.ServicenNetFramework.Auth
 		IEnumerable<DmsNode> GetCabinetContent(string cabinetId, string username);
 		Task<IEnumerable<DmsNode>> GetFolderContent(string username, string id, bool isRoot);
 		IEnumerable<DokmeeFilesystem> GetDokmeeFilesystems(string username, string name, bool isFolder, string cabinetId);
-		void UpdateIndex(string username, string nodeID, IEnumerable<DokmeeIndex> dokmeeIndex, string cabinetId);
+		void UpdateIndex(string username, Dictionary<object, object> args);
+		void Preview(string username, string id, string cabinetId);
 	}
 }

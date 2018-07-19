@@ -97,36 +97,23 @@ namespace Web.Controllers
 		[HttpPost]
 		public ActionResult UpdateStatus(Dictionary<object, object> args)
 		{
-			var result = false;
 			if (args != null && args.ContainsKey("CustomerStatus"))
 			{
 				string username = User.Identity.GetUserId();
-				var status = args["CustomerStatus"].ToString().Split(';');
-				var cabinetId = args["CabinetId"].ToString();
-				if (status.Length > 0)
-				{
-					foreach (var item in status)
-					{
-						var info = item.Split(':');
-						if (info.Length == 2)
-						{
-							var nodeId = info[0].Trim();
-							var customerStatus = info[1].Trim();
-							IEnumerable<DokmeeIndex> dokmeeIndex = new List<DokmeeIndex>
-							{
-								new DokmeeIndex
-								{
-									Name="Document Status",
-									Value=customerStatus
-								}
-							};
-							_dokmeeService.UpdateIndex(username, nodeId, dokmeeIndex, cabinetId);
-						}
-					}
-				}
-				result = true;
+				_dokmeeService.UpdateIndex(username, args);
 			}
-			return View(result);
+			return Json(new { });
+		}
+
+		[HttpPost]
+		public ActionResult Preview(string id, string cabinetId)
+		{
+			if (!string.IsNullOrEmpty(id)&& !string.IsNullOrEmpty(cabinetId))
+			{
+				string username = User.Identity.GetUserId();
+				_dokmeeService.Preview(username, id, cabinetId);
+			}
+			return Json(new { });
 		}
 	}
 }
